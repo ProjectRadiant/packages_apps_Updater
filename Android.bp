@@ -26,6 +26,7 @@ android_app {
         "androidx.cardview_cardview",
         "androidx.preference_preference",
         "androidx.recyclerview_recyclerview",
+        "VendorSupport-preference",
     ],
 
     resource_dirs: ["res"],
@@ -36,14 +37,14 @@ android_app {
         proguard_flags_files: ["proguard.flags"],
     },
 
-    required: ["privapp_whitelist_org.cesium.updater.xml"],
+    required: ["privapp_whitelist_com.nezuko.updater.xml"],
 
 }
 
 prebuilt_etc {
-    name: "privapp_whitelist_org.cesium.updater.xml",
+    name: "privapp_whitelist_com.nezuko.updater.xml",
 
-    src: "privapp_whitelist_org.cesium.updater.xml",
+    src: "privapp_whitelist_com.nezuko.updater.xml",
     sub_dir: "permissions",
 
 }

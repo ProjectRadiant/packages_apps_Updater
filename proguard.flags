@@ -1,1 +1,1 @@
--keep class org.cesium.updater.ui.FlingBehavior { *; }
+-keep class com.nezuko.updater.ui.FlingBehavior { *; }
