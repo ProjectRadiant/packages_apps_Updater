@@ -48,8 +48,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SimpleItemAnimator;
 
 import com.google.android.material.appbar.AppBarLayout;
-import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.snackbar.Snackbar;
+import android.graphics.drawable.ColorDrawable;
 
 import org.json.JSONException;
 import com.nezuko.updater.controller.UpdaterController;
@@ -60,6 +60,9 @@ import com.nezuko.updater.misc.Constants;
 import com.nezuko.updater.misc.StringGenerator;
 import com.nezuko.updater.misc.Utils;
 import com.nezuko.updater.model.UpdateInfo;
+import android.widget.LinearLayout;
+import android.graphics.drawable.PaintDrawable;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
 import java.io.File;
 import java.io.IOException;
@@ -70,16 +73,19 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
+import com.nezuko.support.monet.colorgiber;
 
 public class UpdatesActivity extends UpdatesListActivity {
 
     private static final String TAG = "UpdatesActivity";
     private UpdaterService mUpdaterService;
     private BroadcastReceiver mBroadcastReceiver;
+    PaintDrawable bgrounded;
 
     private UpdatesListAdapter mAdapter;
 
     private View mUpdateButton;
+    colorgiber cg = new colorgiber();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,8 +121,9 @@ public class UpdatesActivity extends UpdatesListActivity {
             }
         };
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        final Toolbar normalToolbar =
+                (Toolbar) findViewById(R.id.normal_toolbar);
+        setSupportActionBar(normalToolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -130,30 +137,17 @@ public class UpdatesActivity extends UpdatesListActivity {
         headerSecurityPatch.setText(
                 getString(R.string.header_security_patch, getSecurityPatch()));
 
-        // Switch between header title and appbar title minimizing overlaps
-        final CollapsingToolbarLayout collapsingToolbar =
-                (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
-        final AppBarLayout appBar = (AppBarLayout) findViewById(R.id.app_bar);
-        appBar.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
-            boolean mIsShown = false;
+        TextView upStat = (TextView) findViewById(R.id.header_update_status);
+        upStat.setTextColor(cg.noSysPriviledgeMoment(1, 7, this));
 
-            @Override
-            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-                int scrollRange = appBarLayout.getTotalScrollRange();
-                if (!mIsShown && scrollRange + verticalOffset < 10) {
-                    collapsingToolbar.setTitle(getString(R.string.display_name));
-                    mIsShown = true;
-                } else if (mIsShown && scrollRange + verticalOffset > 100) {
-                    collapsingToolbar.setTitle(null);
-                    mIsShown = false;
-                }
-            }
-        });
+        bgrounded =  new PaintDrawable(cg.noSysPriviledgeMoment(4, 1, this));
+        bgrounded.setCornerRadius(pxToDp(this ,160));
 
-        if (!Utils.hasTouchscreen(this)) {
-            // This can't be collapsed without a touchscreen
-            appBar.setExpanded(false);
-        }
+        LinearLayout ll1 = (LinearLayout) findViewById(R.id.llBG1);
+        ll1.setBackground(new ColorDrawable(cg.noSysPriviledgeMoment(4, 1, this)));
+
+        CoordinatorLayout cl1 = (CoordinatorLayout) findViewById(R.id.main_container);
+        cl1.setBackground(new ColorDrawable(cg.noSysPriviledgeMoment(4, 0, this)));
 
         mUpdateButton = findViewById(R.id.check_update);
         mUpdateButton.setOnClickListener(new View.OnClickListener() {
@@ -162,6 +156,8 @@ public class UpdatesActivity extends UpdatesListActivity {
                 downloadUpdatesList(true);
             }
         });
+
+        normalToolbar.setBackgroundColor(cg.noSysPriviledgeMoment(4, 0, this));
     }
 
     @Override
@@ -264,6 +260,11 @@ public class UpdatesActivity extends UpdatesListActivity {
             mAdapter.notifyDataSetChanged();
         }
     }
+
+    public static int pxToDp(Context context, int px) {
+        return (int) ((px / context.getResources().getDisplayMetrics().density) + 0.5);
+    }
+
 
     private void getUpdatesList() {
         File jsonFile = Utils.getCachedUpdateList(this);
@@ -370,6 +371,7 @@ public class UpdatesActivity extends UpdatesListActivity {
         String lastCheckString = getString(R.string.header_last_updates_check,
                 StringGenerator.getTimeLocalized(this, lastCheck));
         TextView headerLastCheck = (TextView) findViewById(R.id.header_last_check);
+        headerLastCheck.setTextColor(cg.noSysPriviledgeMoment(1, 10, this));
         headerLastCheck.setText(lastCheckString);
     }
 
