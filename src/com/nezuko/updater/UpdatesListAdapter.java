@@ -38,6 +38,8 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.FrameLayout;
+import android.app.ActivityThread;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.view.ContextThemeWrapper;
@@ -45,6 +47,7 @@ import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.appcompat.view.menu.MenuPopupHelper;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.recyclerview.widget.RecyclerView;
+import android.graphics.drawable.PaintDrawable;
 
 import com.google.android.material.snackbar.Snackbar;
 
@@ -66,10 +69,15 @@ import java.net.URL;
 import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.util.List;
+import com.nezuko.support.monet.UpdaterColors;
+import android.graphics.drawable.Drawable;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.LayerDrawable;
 
 public class UpdatesListAdapter extends RecyclerView.Adapter<UpdatesListAdapter.ViewHolder> {
 
     private static final String TAG = "UpdateListAdapter";
+    UpdaterColors uc = new UpdaterColors();
 
     private static final int BATTERY_PLUGGED_ANY = BatteryManager.BATTERY_PLUGGED_AC
             | BatteryManager.BATTERY_PLUGGED_USB
@@ -106,6 +114,9 @@ public class UpdatesListAdapter extends RecyclerView.Adapter<UpdatesListAdapter.
 
         private ProgressBar mProgressBar;
         private TextView mProgressText;
+        private FrameLayout mFrm;
+        PaintDrawable bgrounded;
+        PaintDrawable bgrounded2;
 
         public ViewHolder(final View view) {
             super(view);
@@ -118,6 +129,7 @@ public class UpdatesListAdapter extends RecyclerView.Adapter<UpdatesListAdapter.
 
             mProgressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
             mProgressText = (TextView) view.findViewById(R.id.progress_text);
+            mFrm = (FrameLayout) view.findViewById(R.id.frm1);
         }
     }
 
@@ -152,6 +164,14 @@ public class UpdatesListAdapter extends RecyclerView.Adapter<UpdatesListAdapter.
 
     private void handleActiveStatus(ViewHolder viewHolder, UpdateInfo update) {
         boolean canDelete = false;
+        final Context context = ActivityThread.currentApplication();
+
+        LayerDrawable progressBarDrawable = (LayerDrawable) viewHolder.mProgressBar.getProgressDrawable();
+        Drawable backgroundDrawable = progressBarDrawable.getDrawable(0);
+        Drawable progressDrawable = progressBarDrawable.getDrawable(1);
+
+        backgroundDrawable.setColorFilter(uc.mainBG(context) , PorterDuff.Mode.SRC_IN);
+        progressDrawable.setColorFilter(uc.iconCol(context), PorterDuff.Mode.SRC_IN);
 
         final String downloadId = update.getDownloadId();
         if (mUpdaterController.isDownloading(downloadId)) {
@@ -172,6 +192,7 @@ public class UpdatesListAdapter extends RecyclerView.Adapter<UpdatesListAdapter.
                         R.string.list_download_progress_new, downloaded, total, percentage));
             }
             setButtonAction(viewHolder.mAction, Action.PAUSE, downloadId, true);
+
             viewHolder.mProgressBar.setIndeterminate(update.getStatus() == UpdateStatus.STARTING);
             viewHolder.mProgressBar.setProgress(update.getProgress());
         } else if (mUpdaterController.isInstallingUpdate(downloadId)) {
@@ -245,6 +266,12 @@ public class UpdatesListAdapter extends RecyclerView.Adapter<UpdatesListAdapter.
             viewHolder.mAction.setEnabled(false);
             return;
         }
+        final Context context = ActivityThread.currentApplication();
+        
+        viewHolder.bgrounded =  new PaintDrawable(uc.secBG(context));
+        viewHolder.bgrounded.setCornerRadius(pxToDp(context, 160));
+
+        viewHolder.mFrm.setBackground(viewHolder.bgrounded);
 
         final String downloadId = mDownloadIds.get(i);
         UpdateInfo update = mUpdaterController.getUpdate(downloadId);
@@ -255,7 +282,20 @@ public class UpdatesListAdapter extends RecyclerView.Adapter<UpdatesListAdapter.
             return;
         }
 
+        viewHolder.bgrounded2 =  new PaintDrawable(uc.secBG(context));
+        viewHolder.bgrounded2.setCornerRadius(pxToDp(context, 250));
+
+        viewHolder.mAction.setBackground(viewHolder.bgrounded2);
+        viewHolder.mChangelog.setBackground(viewHolder.bgrounded2);
+
+        viewHolder.mAction.setTextColor(uc.primaryCol(context));
+        viewHolder.mChangelog.setTextColor(uc.primaryCol(context));
+
         viewHolder.itemView.setSelected(downloadId.equals(mSelectedDownload));
+        viewHolder.mBuildVersion.setTextColor(uc.primaryCol(context));
+        viewHolder.mBuildDate.setTextColor(uc.secondaryCol(context));
+        viewHolder.mBuildSize.setTextColor(uc.secondaryCol(context));
+        viewHolder.mProgressText.setTextColor(uc.secondaryCol(context));
 
         boolean activeLayout;
         switch (update.getPersistentStatus()) {
@@ -285,6 +325,10 @@ public class UpdatesListAdapter extends RecyclerView.Adapter<UpdatesListAdapter.
         } else {
             handleNotActiveStatus(viewHolder, update);
         }
+    }
+
+    public static int pxToDp(Context context, int px) {
+        return (int) ((px / context.getResources().getDisplayMetrics().density) + 0.5);
     }
 
     @Override
@@ -485,8 +529,7 @@ public class UpdatesListAdapter extends RecyclerView.Adapter<UpdatesListAdapter.
 
         String buildDate = StringGenerator.getDateLocalizedUTC(mActivity,
                 DateFormat.MEDIUM, update.getTimestamp());
-        String buildInfoText = mActivity.getString(R.string.list_build_version_date,
-                BuildInfoUtils.getBuildVersion(), buildDate);
+        String buildInfoText = mActivity.getString(R.string.list_build_version_date, buildDate);
         return new AlertDialog.Builder(mActivity)
                 .setTitle(R.string.apply_update_dialog_title)
                 .setMessage(mActivity.getString(resId, buildInfoText,

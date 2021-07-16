@@ -1,115 +1,133 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:layout_marginHorizontal="20dp"
+    android:layout_marginTop="20dp"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp"
-    android:focusable="true"
-    android:foreground="?attr/selectableItemBackground"
-    android:nextFocusRight="@+id/update_action"
-    app:cardCornerRadius="@*android:dimen/config_dialogCornerRadius"
-    app:contentPadding="4dp">
+    android:orientation="vertical">
 
-    <LinearLayout
+    <FrameLayout
+        android:id="@+id/frm1"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="horizontal"
-        android:paddingTop="12dp"
-        android:weightSum="1">
+        android:layout_height="wrap_content">
 
-        <LinearLayout
-            android:layout_width="0dp"
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/build_version"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:alpha="0.87"
-                android:paddingLeft="12dp"
-                android:paddingTop="4dp"
-                android:drawablePadding="8dp"
-                android:maxLines="1"
-                android:paddingBottom="8sp"
-                android:textColor="?android:attr/textColorPrimary"
-                android:textSize="14sp"
-                tools:text="NezukoOS" />
-
-            <TextView
-                android:id="@+id/build_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="12dp"
-                android:paddingTop="4dp"
-                android:maxLines="1"
-                android:textSize="14sp"
-                tools:text="29 February 2018" />
-
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="12dp">
-
-                <ProgressBar
-                    android:id="@+id/progress_bar"
-                    style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingTop="4sp"
-                    android:paddingRight="12dp"
-                    android:visibility="invisible"
-                    tools:progress="65"
-                    tools:visibility="visible" />
-
-                <TextView
-                    android:id="@+id/progress_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/progress_bar"
-                    android:ellipsize="marquee"
-                    android:singleLine="true"
-                    android:visibility="invisible"
-                    tools:text="162 of 300 MB (3 minutes left) • 65%"
-                    tools:visibility="visible" />
-
-                <TextView
-                    android:id="@+id/build_size"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingTop="8sp"
-                    android:singleLine="true"
-                    tools:text="300 MB"
-                    tools:visibility="invisible" />
-            </RelativeLayout>
+            android:layout_margin="8dp"
+            android:focusable="true"
+            android:nextFocusRight="@+id/update_action"
+            app:cardBackgroundColor="#00FFFFFF"
+            app:cardElevation="0dp"
+            app:contentPadding="4dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:orientation="horizontal"
-                android:gravity="center_vertical">
+                android:paddingVertical="12dp"
+                android:weightSum="1">
 
-                <Button
-                    android:id="@+id/update_action"
-                    style="@style/Widget.AppCompat.Button.Borderless.Colored"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:gravity="left|center_vertical"
-                    android:textAllCaps="false"
-                    tools:text="Pause" />
+                    android:layout_weight="1"
+                    android:orientation="vertical">
 
-                <Button
-                    android:id="@+id/update_changelog"
-                    style="@style/Widget.AppCompat.Button.Borderless.Colored"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="left|center_vertical"
-                    android:text="@string/action_changelog"
-                    android:textAllCaps="false" />
+                    <TextView
+                        android:id="@+id/build_version"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:alpha="0.87"
+                        android:drawablePadding="8dp"
+                        android:maxLines="1"
+                        android:paddingLeft="12dp"
+                        android:paddingTop="4dp"
+                        android:paddingBottom="8sp"
+                        android:textColor="?android:attr/textColorPrimary"
+                        android:textSize="14sp"
+                        tools:text="Project Radiant" />
+
+                    <TextView
+                        android:id="@+id/build_date"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:maxLines="1"
+                        android:paddingLeft="12dp"
+                        android:paddingTop="4dp"
+                        android:textSize="14sp"
+                        tools:text="29 February 2018" />
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="12dp">
+
+                        <ProgressBar
+                            android:id="@+id/progress_bar"
+                            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="4sp"
+                            android:paddingRight="12dp"
+                            android:progressDrawable="@drawable/prog_dr"
+                            android:visibility="invisible"
+                            tools:progress="65"
+                            tools:visibility="visible" />
+
+                        <TextView
+                            android:id="@+id/progress_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/progress_bar"
+                            android:ellipsize="marquee"
+                            android:singleLine="true"
+                            android:visibility="invisible"
+                            tools:text="162 of 300 MB (3 minutes left) • 65%"
+                            tools:visibility="visible" />
+
+                        <TextView
+                            android:id="@+id/build_size"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="8sp"
+                            android:singleLine="true"
+                            tools:text="300 MB"
+                            tools:visibility="invisible" />
+                    </RelativeLayout>
+                    
+                </LinearLayout>
             </LinearLayout>
-        </LinearLayout>
-    </LinearLayout>
-</androidx.cardview.widget.CardView>
+        </androidx.cardview.widget.CardView>
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:layout_marginTop="20dp"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/update_action"
+            style="@style/Widget.AppCompat.Button.Borderless.Colored"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start|center_vertical"
+            android:textAllCaps="false"
+            tools:text="Pause" />
+
+        <Button
+            android:id="@+id/update_changelog"
+            style="@style/Widget.AppCompat.Button.Borderless.Colored"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:text="@string/action_changelog"
+            android:textAllCaps="false" />
+    </FrameLayout>
+    
+</LinearLayout>

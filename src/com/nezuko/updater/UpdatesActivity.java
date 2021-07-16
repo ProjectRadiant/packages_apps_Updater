@@ -37,6 +37,12 @@ import android.view.animation.RotateAnimation;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.ImageView;
+import android.graphics.PorterDuffColorFilter;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import android.content.res.ColorStateList;
+import android.os.SystemProperties;
+
 import android.text.format.DateFormat;
 
 import androidx.appcompat.app.AlertDialog;
@@ -73,7 +79,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
-import com.nezuko.support.monet.colorgiber;
+import com.nezuko.support.monet.UpdaterColors;
+import android.graphics.drawable.Drawable;
+import android.graphics.PorterDuff;
 
 public class UpdatesActivity extends UpdatesListActivity {
 
@@ -81,11 +89,12 @@ public class UpdatesActivity extends UpdatesListActivity {
     private UpdaterService mUpdaterService;
     private BroadcastReceiver mBroadcastReceiver;
     PaintDrawable bgrounded;
+    PaintDrawable bgrounded2;
 
     private UpdatesListAdapter mAdapter;
 
     private View mUpdateButton;
-    colorgiber cg = new colorgiber();
+    UpdaterColors uc = new UpdaterColors();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,38 +135,73 @@ public class UpdatesActivity extends UpdatesListActivity {
         setSupportActionBar(normalToolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        final Drawable upArrow = getResources().getDrawable(R.drawable.ic_back);
+        upArrow.setColorFilter(uc.headerCol(this), PorterDuff.Mode.SRC_ATOP);
+        getSupportActionBar().setHomeAsUpIndicator(upArrow);
 
         updateLastCheckedString();
 
         TextView headerBuildVersion = (TextView) findViewById(R.id.header_build_version);
-        headerBuildVersion.setText(
-                getString(R.string.header_android_version, Build.VERSION.RELEASE));
+        headerBuildVersion.setText(Build.VERSION.RELEASE);
+        headerBuildVersion.setTextColor(uc.secondaryCol(this));
 
         TextView headerSecurityPatch = (TextView) findViewById(R.id.header_security_patch);
-        headerSecurityPatch.setText(
-                getString(R.string.header_security_patch, getSecurityPatch()));
+        headerSecurityPatch.setText(getSecurityPatch());
+        headerSecurityPatch.setTextColor(uc.secondaryCol(this));
+
+        TextView romVersion = (TextView) findViewById(R.id.rom_version);
+        romVersion.setTextColor(uc.secondaryCol(this));
+        romVersion.setText(SystemProperties.get(Constants.PROP_BUILD_VERSION));
+
+        TextView headerBuildV = (TextView) findViewById(R.id.header_build_v);
+        TextView headerSecurityP = (TextView) findViewById(R.id.header_security_p);
+        TextView headerROMV = (TextView) findViewById(R.id.rom_ver);
+
+        ImageView Pau = (ImageView) findViewById(R.id.pau);
+        ImageView Ref = (ImageView) findViewById(R.id.ref);
+        ImageView Nij = (ImageView) findViewById(R.id.nij);
+
+        Pau.setColorFilter(uc.iconCol(this));
+        Ref.setColorFilter(uc.iconCol(this));
+        Nij.setColorFilter(uc.iconCol(this));
+
+        headerBuildV.setTextColor(uc.primaryCol(this));
+        headerSecurityP.setTextColor(uc.primaryCol(this));
+        headerROMV.setTextColor(uc.primaryCol(this));
 
         TextView upStat = (TextView) findViewById(R.id.header_update_status);
-        upStat.setTextColor(cg.noSysPriviledgeMoment(1, 7, this));
+        upStat.setTextColor(uc.primaryCol(this));
 
-        bgrounded =  new PaintDrawable(cg.noSysPriviledgeMoment(4, 1, this));
+        bgrounded =  new PaintDrawable(uc.secBG(this));
         bgrounded.setCornerRadius(pxToDp(this ,160));
 
         LinearLayout ll1 = (LinearLayout) findViewById(R.id.llBG1);
-        ll1.setBackground(new ColorDrawable(cg.noSysPriviledgeMoment(4, 1, this)));
+        ll1.setBackground(bgrounded);
+
+        bgrounded2 =  new PaintDrawable(uc.secBG(this));
+        bgrounded2.setCornerRadius(pxToDp(this ,161));
+
+        LinearLayout ll2 = (LinearLayout) findViewById(R.id.llBG2);
+        ll2.setBackground(bgrounded2);
 
         CoordinatorLayout cl1 = (CoordinatorLayout) findViewById(R.id.main_container);
-        cl1.setBackground(new ColorDrawable(cg.noSysPriviledgeMoment(4, 0, this)));
+        cl1.setBackground(new ColorDrawable(uc.mainBG(this)));
 
-        mUpdateButton = findViewById(R.id.check_update);
-        mUpdateButton.setOnClickListener(new View.OnClickListener() {
+        AppBarLayout ab1 = (AppBarLayout) findViewById(R.id.app_bar);
+        ab1.setBackground(new ColorDrawable(uc.mainBG(this)));
+
+        FloatingActionButton mFab = (FloatingActionButton) findViewById(R.id.check_update);
+        mFab.setImageResource(R.drawable.ic_menu_refresh);
+        mFab.setBackgroundTintList(ColorStateList.valueOf(uc.iconCol(this)));
+
+        mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 downloadUpdatesList(true);
             }
         });
 
-        normalToolbar.setBackgroundColor(cg.noSysPriviledgeMoment(4, 0, this));
+        normalToolbar.setBackgroundColor(uc.mainBG(this));
     }
 
     @Override
@@ -187,6 +231,10 @@ public class UpdatesActivity extends UpdatesListActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_toolbar, menu);
+
+        Drawable drawable = menu.findItem(R.id.menu_preferences).getIcon();
+        drawable.mutate();
+        drawable.setColorFilter(uc.headerCol(this), PorterDuff.Mode.SRC_ATOP);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -371,7 +419,7 @@ public class UpdatesActivity extends UpdatesListActivity {
         String lastCheckString = getString(R.string.header_last_updates_check,
                 StringGenerator.getTimeLocalized(this, lastCheck));
         TextView headerLastCheck = (TextView) findViewById(R.id.header_last_check);
-        headerLastCheck.setTextColor(cg.noSysPriviledgeMoment(1, 10, this));
+        headerLastCheck.setTextColor(uc.secondaryCol(this));
         headerLastCheck.setText(lastCheckString);
     }
 
