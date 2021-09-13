@@ -77,7 +77,6 @@ import android.graphics.drawable.LayerDrawable;
 public class UpdatesListAdapter extends RecyclerView.Adapter<UpdatesListAdapter.ViewHolder> {
 
     private static final String TAG = "UpdateListAdapter";
-    UpdaterColors uc = new UpdaterColors();
 
     private static final int BATTERY_PLUGGED_ANY = BatteryManager.BATTERY_PLUGGED_AC
             | BatteryManager.BATTERY_PLUGGED_USB
@@ -169,6 +168,7 @@ public class UpdatesListAdapter extends RecyclerView.Adapter<UpdatesListAdapter.
         LayerDrawable progressBarDrawable = (LayerDrawable) viewHolder.mProgressBar.getProgressDrawable();
         Drawable backgroundDrawable = progressBarDrawable.getDrawable(0);
         Drawable progressDrawable = progressBarDrawable.getDrawable(1);
+        UpdaterColors uc = new UpdaterColors(context);
 
         backgroundDrawable.setColorFilter(uc.mainBG(context) , PorterDuff.Mode.SRC_IN);
         progressDrawable.setColorFilter(uc.iconCol(context), PorterDuff.Mode.SRC_IN);
@@ -267,7 +267,8 @@ public class UpdatesListAdapter extends RecyclerView.Adapter<UpdatesListAdapter.
             return;
         }
         final Context context = ActivityThread.currentApplication();
-        
+        UpdaterColors uc = new UpdaterColors(context);
+
         viewHolder.bgrounded =  new PaintDrawable(uc.secBG(context));
         viewHolder.bgrounded.setCornerRadius(pxToDp(context, 160));
 

@@ -94,7 +94,6 @@ public class UpdatesActivity extends UpdatesListActivity {
     private UpdatesListAdapter mAdapter;
 
     private View mUpdateButton;
-    UpdaterColors uc = new UpdaterColors();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -136,6 +135,7 @@ public class UpdatesActivity extends UpdatesListActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         final Drawable upArrow = getResources().getDrawable(R.drawable.ic_back);
+        UpdaterColors uc = new UpdaterColors(this);
         upArrow.setColorFilter(uc.headerCol(this), PorterDuff.Mode.SRC_ATOP);
         getSupportActionBar().setHomeAsUpIndicator(upArrow);
 
@@ -231,6 +231,7 @@ public class UpdatesActivity extends UpdatesListActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_toolbar, menu);
+        UpdaterColors uc = new UpdaterColors(this);
 
         Drawable drawable = menu.findItem(R.id.menu_preferences).getIcon();
         drawable.mutate();
@@ -419,6 +420,7 @@ public class UpdatesActivity extends UpdatesListActivity {
         String lastCheckString = getString(R.string.header_last_updates_check,
                 StringGenerator.getTimeLocalized(this, lastCheck));
         TextView headerLastCheck = (TextView) findViewById(R.id.header_last_check);
+        UpdaterColors uc = new UpdaterColors(this);
         headerLastCheck.setTextColor(uc.secondaryCol(this));
         headerLastCheck.setText(lastCheckString);
     }
